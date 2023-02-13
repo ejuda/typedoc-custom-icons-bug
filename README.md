@@ -16,8 +16,11 @@ the right hand side of the two screenshots:
 
 - default theme:
 
+  ![icons](https://user-images.githubusercontent.com/26031740/218453413-fa688144-89e3-41a8-9365-e9f219060a23.PNG) 
+
 - custom theme (see the reproduction repository linked in reproduction steps):
 
+  ![no-icons](https://user-images.githubusercontent.com/26031740/218453471-c7c88b8c-0074-4096-a070-8d3b77eb3c67.PNG)
 
 I believe this is due to [this
 call](https://github.com/TypeStrong/typedoc/blob/7a3f52175a5450e3637fb5dcd22d121028828f83/src/lib/output/renderer.ts#L243)
@@ -47,7 +50,11 @@ Documentation generated at ./docs
 
 The icons on `modules.html` page are all shown correctly:
 
+![modules-icons](https://user-images.githubusercontent.com/26031740/218453546-b430f682-4bc2-47f4-9f78-54ca46066534.PNG)
+
 But the class icon on `classes/IconOverrideTheme.html` is not:
+
+![no-icons](https://user-images.githubusercontent.com/26031740/218453471-c7c88b8c-0074-4096-a070-8d3b77eb3c67.PNG)
 
 as it attempts to use (`<use href="#icon-128-path"></use>`) an element that
 does not exist on the page.
