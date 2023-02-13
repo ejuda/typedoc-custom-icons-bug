@@ -1,60 +1,39 @@
 import {
   Application,
-  JSX,
-  DefaultTheme,
   PageEvent,
   Reflection,
+  DefaultTheme,
   DefaultThemeRenderContext,
   Options,
 } from "typedoc";
 
-/**
- * A clone of the default theme, which prints a message when rendering each page.
- */
-export class LoggingTheme extends DefaultTheme {
-  render(page: PageEvent<Reflection>): string {
-    this.application.logger.info(`Rendering ${page.url}`);
-    return super.render(page);
-  }
-}
+import { icons as _icons } from "./icon";
 
 /**
  * The theme context is where all of the partials live for rendering a theme,
  * in addition to some helper functions.
  */
-export class FooterOverrideThemeContext extends DefaultThemeRenderContext {
+export class IconOverrideThemeContext extends DefaultThemeRenderContext {
   constructor(theme: DefaultTheme, options: Options) {
     super(theme, options);
 
-    const oldFooter = this.footer;
-
-    // Overridden methods must have `this` bound if they intend to use it.
-    // <JSX.Raw /> may be used to inject HTML directly.
-    this.footer = () => {
-      return (
-        <>
-          {oldFooter()}
-          <div class="container">
-            <JSX.Raw
-              html={this.markdown(
-                "Custom footer text, with **markdown** support!"
-              )}
-            />
-          </div>
-        </>
-      );
-    };
+    this.icons = _icons;
   }
 }
 
 /**
  * A near clone of the default theme, that adds some custom text after the footer.
  */
-export class FooterOverrideTheme extends DefaultTheme {
-  private _contextCache?: FooterOverrideThemeContext;
+export class IconOverrideTheme extends DefaultTheme {
+  private _contextCache?: IconOverrideThemeContext;
 
-  override getRenderContext(): FooterOverrideThemeContext {
-    this._contextCache ||= new FooterOverrideThemeContext(
+  render(page: PageEvent<Reflection>): string {
+    this.application.logger.info(`Rendering ${page.url}`);
+    return super.render(page);
+  }
+
+  override getRenderContext(): IconOverrideThemeContext {
+    this._contextCache ||= new IconOverrideThemeContext(
       this,
       this.application.options
     );
@@ -67,17 +46,5 @@ export class FooterOverrideTheme extends DefaultTheme {
  * can be selected by the user.
  */
 export function load(app: Application) {
-  // Hooks can be used to inject some HTML without fully overwriting the theme.
-  app.renderer.hooks.on("body.begin", (_) => (
-    <script>
-      <JSX.Raw html="console.log(`Loaded ${location.href}`)" />
-    </script>
-  ));
-
-  // Or you can define a custom theme. This one behaves exactly like the default theme,
-  // but logs a message when rendering a page.
-  app.renderer.defineTheme("logging", LoggingTheme);
-
-  // While this one overwrites the footer to include custom content.
-  app.renderer.defineTheme("footer", FooterOverrideTheme);
+  app.renderer.defineTheme("icon-override", IconOverrideTheme);
 }
